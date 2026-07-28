@@ -83,3 +83,64 @@
 - Replaced `like()` insert flow (`insert + orIgnore`) with `findOne(LikeEntity)` guard and `save()` creation.
 - Kept increment only when the like did not exist, ensuring repeated like is a no-op for `likesCount`.
 - Preserved transaction scope and response shape, then validated with build and lints.
+---
+### 2026-07-28T17:25:12.2460115+02:00 — Codex 5.3
+
+**Prompt (verbatim):**
+> Convierte los it.todo en tests reales.
+>
+> los metodos de PostService su like y unlike ya estan implementados usando transaction con findOne + save, por lo que no uses el orIgnore
+> En src/posts/posts.service.spec.ts (unitario, mockea los repos) debe ejecutarse con EntityManager mockeado
+>
+> casos a cubrir
+> 1. like(): un post sin like previo: inserta y sube likesCount en 1, devuelve likedByMe: true.
+> 2. like() repetido (mismo post y usuario) → el segundo insert es ignorado, likesCount NO sube dos veces.
+> 3. unlike() de un like existente → borra y baja likesCount en 1.
+> 4. unlike() de algo que no existía → no falla, likesCount no cambia.
+> 5. y si no existe ambos metodos lanzan notfoundexception
+>
+> dataSource.transaction.mockImplementation(callback => callback(mockManager))
+> mockManager debe exponer findOne, save, delete, increment, decrement
+>
+> En test/like.e2e-spec.ts (contra la app real) app.getHttpServer()
+> 1. POST /v1/posts/:id/like sin header x-user-id tiene que responder con el codigo que defina @CurrentUser() (revisa current-user.decorator.ts, probablemente 400 o 403)
+> 2. POST seguido de otro POST (mismo usuario, mismo post) el segundo responde 200 con el mismo likesCount que el primero (no duplica).
+> 3. POST y luego DELETE likedByMe pasa de true a false y likesCount vuelve al valor original.
+>
+> Usa un post y usuario existentes del seed (ej: Mario con ID `33333333-3333-3333-3333-333333333333` y su primer post)
+> obten el postId de la base de datos o del seed
+>
+> - no dejes ningun `it.todo` sin convertir
+> - los tests deben pasar con la implementacion actual
+> - no modifiques la logica de negocio, solo escribe tests
+
+**What I did:**
+- Converted `posts.service.spec.ts` into real unit tests with mocked `DataSource.transaction` / `EntityManager` covering like/unlike happy paths, idempotency, and NotFound.
+- Converted `like.e2e-spec.ts` into real Nest e2e tests using seed IDs (Mario + POST_1), asserting 401 without `x-user-id`, idempotent double POST, and POST+DELETE restore.
+- Verified all unit and e2e tests pass; did not change business logic.
+---
+### 2026-07-28T17:57:11.1917654+02:00 — Codex 5.3
+
+**Prompt (verbatim):**
+> Haz una revision final de todo el codigo implementado con estos criterios:
+>
+> 1. codigo limpio: nombrado consistente, sin duplicacion, tipos explicitos
+> 2. seguridad: No exposiciones de información sensible, manejo de errores adecuado
+> 3. rendimiento: consultas optimizadas, indices correctos, evitando N+1
+> 4. consistencia: los DTOs se usan correctamente, los decoradores están presentes
+> 5. manejo de errores: excepciones de NestJS apropiadas (NotFoundException, etc.)
+> 6. idempotencia: like/unlike son idempotentes (repetir no cambia estado final)
+>
+> - verifica que los endpoints devuelvan exactamente el formato de PostsPageDto y LikeResultDto
+> - comprueba que la paginacion funciona correctamente (cursor, limite, orden)
+> - asegura que el flag likedByMe es correcto para el usuario actual
+> - revisa que las transacciones se cierren correctamente (commit/rollback/release)
+>
+> entrega el codigo completo de los archivos modificados y un resumen de los cambios
+
+**What I did:**
+- Reviewed `users.service.ts`, `posts.service.ts`, DTOs/controllers, entities, and tests against the six quality criteria.
+- Confirmed response shapes, cursor pagination, likedByMe batch query, and TypeORM transaction commit/rollback behavior.
+- Documented one minor concurrent race risk on `like()` with findOne+save; created canvas review artifact.
+- Delivered complete modified source files and a change summary (no business-logic changes in this turn).
+
