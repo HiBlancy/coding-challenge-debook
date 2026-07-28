@@ -1,0 +1,15 @@
+# Dependencias / builds
+node_modules/
+dist/
+coverage/
+.expo/
+*.log
+
+# Entorno
+.env
+
+# macOS
+.DS_Store
+
+# ⚠️ NUNCA ignores .ai-logs/ — forma parte de la entrega (ver README.md)
+!.ai-logs/

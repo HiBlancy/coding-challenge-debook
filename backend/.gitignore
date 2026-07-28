@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+.env
+*.log
+
+# NUNCA ignores .ai-logs/ — forma parte de la entrega (ver README raíz)
