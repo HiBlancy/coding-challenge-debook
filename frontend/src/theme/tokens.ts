@@ -1,27 +1,27 @@
 /**
  * Design tokens.
  *
- * Estos valores son PLACEHOLDERS para que la app compile y renderice algo.
  * El diseño real está en el Figma: define aquí los tokens que necesites.
  * Usa siempre tokens, nunca valores sueltos.
  */
 
 export const colors = {
-  gradientTop: '#0A0A0A',
-  gradientMid: '#0A0A0A',
+  gradientTop: '#DC0867',
   bg: '#000000',
 
   surface: '#161616',
   surfaceElevated: '#1F1F1F',
   border: '#2A2A2A',
+  chipBackground: '#2C2C2C',
 
   textPrimary: '#FFFFFF',
   textSecondary: '#BDBDBD',
   textMuted: '#8A8A8A',
 
   accent: '#888888',
-  verified: '#888888',
+  verified: '#DC0867',
   key: '#888888',
+  success: '#34C759',
 } as const;
 
 export const spacing = {
@@ -38,6 +38,12 @@ export const radius = {
   md: 16,
   lg: 20,
   pill: 999,
+} as const;
+
+export const sizes = {
+  postAvatar: 44,
+  profileAvatar: 116,
+  moreIcon: 22,
 } as const;
 
 export const typography = {

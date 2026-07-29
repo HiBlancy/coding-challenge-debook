@@ -202,3 +202,21 @@
 **What I did:**
 - Replaced placeholder in `frontend/src/hooks/useProfilePosts.ts` with `useInfiniteQuery` wired to `fetchProfilePosts`.
 - Mapped pages to flat `posts` and wrapped `refetch` / `fetchNextPage` as `() => void`; `tsc --noEmit` passed.
+---
+### 2026-07-29T16:36:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> Aplica estos cambios de estilo en el frontend, usando siempre los tokens de
+> src/theme/tokens.ts (añade los que falten ahí, no valores sueltos en los
+> componentes):
+>
+> 1. DEGRADADO DE FONDO ... 2. BADGE DE VERIFICADO ... 3. ANCHO DEL TEXTO DEL POST ...
+> 4. CHIPS DE ACCIÓN ... 5. VISIBILIDAD DE AVATARES ...
+
+**What I did:**
+- Updated `tokens.ts`: `gradientTop` `#DC0867`, removed `gradientMid`, added `chipBackground`, `success`, `verified` red, `sizes`.
+- `ProfileScreen`: 2-stop LinearGradient sized via `onLayout` of `ProfileHeader` + safe area.
+- `VerifiedBadge` picks up `colors.verified` automatically.
+- `PostCard` body indented to align with author text block; avatar Image props for load/debug.
+- `ProfileHeader` action chips gray/white, green trending icon, Clubs notification badge absolute; avatar Image props.
+- `Pill` default bg uses `colors.bg` instead of hardcoded black.

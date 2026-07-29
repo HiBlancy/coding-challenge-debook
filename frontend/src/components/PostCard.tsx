@@ -5,10 +5,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Post } from '@/types';
 import { formatShortDate } from '@/utils/formatDate';
 import { formatCount } from '@/utils/formatCount';
-import { colors, radius, spacing, typography } from '@/theme/tokens';
+import { colors, radius, sizes, spacing, typography } from '@/theme/tokens';
 import { PostActions } from './PostActions';
 import { Pill } from './Pill';
 import { VerifiedBadge } from './VerifiedBadge';
+
+/** Indentación del cuerpo alineada con "X libros" (no con el avatar). */
+const authorTextIndent = sizes.postAvatar + spacing.md;
+const authorTextTrailing = sizes.moreIcon + spacing.md;
 
 /**
  * Tarjeta de un post del feed "Convos". Estilo de andamiaje mínimo;
@@ -21,7 +25,16 @@ export function PostCard({ post }: { post: Post }) {
     <View style={styles.card}>
       {/* Cabecera de autor */}
       <View style={styles.authorRow}>
-        <Image source={{ uri: post.author.avatarUrl }} style={styles.avatar} />
+        <Image
+          source={{ uri: post.author.avatarUrl }}
+          style={styles.avatar}
+          contentFit="cover"
+          transition={200}
+          cachePolicy="none"
+          onError={(e) => {
+            console.warn('avatar load error', post.author.avatarUrl, e);
+          }}
+        />
         <View style={styles.authorInfo}>
           <View style={styles.authorNameRow}>
             <Text style={typography.authorName}>{post.author.fullName}</Text>
@@ -38,11 +51,18 @@ export function PostCard({ post }: { post: Post }) {
             {formatCount(post.author.booksCount)} libros
           </Text>
         </View>
-        <Feather name="more-horizontal" size={22} color={colors.textMuted} />
+        <Feather
+          name="more-horizontal"
+          size={sizes.moreIcon}
+          color={colors.textMuted}
+        />
       </View>
 
-      {/* Cuerpo */}
-      <Text style={typography.body} numberOfLines={expanded ? undefined : 6}>
+      {/* Cuerpo — alineado con el bloque de texto del autor */}
+      <Text
+        style={[typography.body, styles.body]}
+        numberOfLines={expanded ? undefined : 6}
+      >
         {post.content}
       </Text>
       {!expanded ? (
@@ -105,8 +125,8 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   avatar: {
-    width: 44,
-    height: 44,
+    width: sizes.postAvatar,
+    height: sizes.postAvatar,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
   },
@@ -143,10 +163,15 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: 14,
   },
+  body: {
+    marginLeft: authorTextIndent,
+    marginRight: authorTextTrailing,
+  },
   readMore: {
     color: colors.accent,
     fontSize: 16,
     marginTop: -spacing.sm,
+    marginLeft: authorTextIndent,
   },
   linkChip: {
     alignSelf: 'flex-start',

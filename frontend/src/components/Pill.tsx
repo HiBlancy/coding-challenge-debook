@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm + 2,
     borderRadius: radius.pill,
-    backgroundColor: '#000000',
+    backgroundColor: colors.bg,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.border,
   },

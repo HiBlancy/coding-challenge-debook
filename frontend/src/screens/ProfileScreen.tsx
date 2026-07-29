@@ -1,8 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   View,
@@ -19,6 +21,7 @@ import { colors, spacing } from '@/theme/tokens';
 
 export function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const [headerHeight, setHeaderHeight] = useState(0);
   const profileQuery = useProfile(PROFILE_USER_ID);
   const {
     posts,
@@ -29,14 +32,21 @@ export function ProfileScreen() {
     isFetchingNextPage,
   } = useProfilePosts(PROFILE_USER_ID);
 
+  const onHeaderLayout = (event: LayoutChangeEvent) => {
+    setHeaderHeight(event.nativeEvent.layout.height);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      {/* Degradado de fondo (magenta → negro). */}
+      {/* Degradado rosa → negro hasta el final del ProfileHeader (chips). */}
       <LinearGradient
-        colors={[colors.gradientTop, colors.gradientMid, colors.bg]}
-        locations={[0, 0.45, 0.85]}
-        style={styles.gradient}
+        colors={[colors.gradientTop, colors.bg]}
+        locations={[0, 1]}
+        style={[
+          styles.gradient,
+          { height: insets.top + headerHeight },
+        ]}
       />
 
       {profileQuery.isLoading ? (
@@ -57,7 +67,9 @@ export function ProfileScreen() {
           contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
           ListHeaderComponent={
             <View style={{ paddingTop: insets.top }}>
-              <ProfileHeader profile={profileQuery.data} />
+              <View onLayout={onHeaderLayout}>
+                <ProfileHeader profile={profileQuery.data} />
+              </View>
               <ProfileTabs />
             </View>
           }
@@ -110,7 +122,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 560,
   },
   center: {
     flex: 1,

@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 import type { UserProfile } from '@/types';
-import { colors, radius, spacing, typography } from '@/theme/tokens';
+import { colors, radius, sizes, spacing, typography } from '@/theme/tokens';
 import { Pill } from './Pill';
 import { StatsRow } from './StatsRow';
 import { VerifiedBadge } from './VerifiedBadge';
@@ -22,7 +22,16 @@ export function ProfileHeader({ profile }: { profile: UserProfile }) {
 
       {/* Avatar */}
       <View style={styles.avatarWrap}>
-        <Image source={{ uri: profile.avatarUrl }} style={styles.avatar} />
+        <Image
+          source={{ uri: profile.avatarUrl }}
+          style={styles.avatar}
+          contentFit="cover"
+          transition={200}
+          cachePolicy="none"
+          onError={(e) => {
+            console.warn('avatar load error', profile.avatarUrl, e);
+          }}
+        />
       </View>
 
       {/* Debooker */}
@@ -57,17 +66,19 @@ export function ProfileHeader({ profile }: { profile: UserProfile }) {
 
       {/* Pills de acción */}
       <View style={styles.actionsRow}>
-        <Pill>Actividad</Pill>
-        <Pill>
-          <Feather name="trending-up" size={16} color={colors.textPrimary} />
+        <Pill style={styles.actionChip}>Actividad</Pill>
+        <Pill style={styles.actionChip}>
+          <Feather name="trending-up" size={16} color={colors.success} />
           <Text style={styles.actionText}>10% Impacto</Text>
         </Pill>
-        <Pill>
-          <Text style={styles.actionText}>Clubs</Text>
-          <View style={styles.badge}>
+        <View style={styles.clubsChipWrap}>
+          <Pill style={styles.actionChip}>
+            <Text style={styles.actionText}>Clubs</Text>
+          </Pill>
+          <View style={styles.clubsBadge}>
             <Text style={styles.badgeText}>3</Text>
           </View>
-        </Pill>
+        </View>
       </View>
     </View>
   );
@@ -94,8 +105,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   avatar: {
-    width: 116,
-    height: 116,
+    width: sizes.profileAvatar,
+    height: sizes.profileAvatar,
     borderRadius: radius.pill,
     backgroundColor: colors.surface,
   },
@@ -138,13 +149,24 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     marginTop: spacing.sm,
     marginBottom: spacing.lg,
+    overflow: 'visible',
+  },
+  actionChip: {
+    backgroundColor: colors.chipBackground,
   },
   actionText: {
     color: colors.textPrimary,
     fontSize: 15,
     fontWeight: '600',
   },
-  badge: {
+  clubsChipWrap: {
+    position: 'relative',
+    overflow: 'visible',
+  },
+  clubsBadge: {
+    position: 'absolute',
+    top: -spacing.sm,
+    right: -spacing.sm,
     minWidth: 18,
     height: 18,
     borderRadius: radius.pill,
