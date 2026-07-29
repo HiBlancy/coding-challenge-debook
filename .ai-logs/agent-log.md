@@ -143,4 +143,34 @@
 - Confirmed response shapes, cursor pagination, likedByMe batch query, and TypeORM transaction commit/rollback behavior.
 - Documented one minor concurrent race risk on `like()` with findOne+save; created canvas review artifact.
 - Delivered complete modified source files and a change summary (no business-logic changes in this turn).
+---
+### 2026-07-29T15:31:00+02:00 — Cursor (Composer)
 
+**Prompt (verbatim):**
+> implementa formatCount(n: number): string en src/utils/formatCount.ts.
+>
+> Debe formatear numeros grandes como se ve en redes sociales, en español:
+> - menos de 1000 → el numero tal cual ("452")
+> - miles → "12,3 mil" (usa coma decimal, no punto, solo si no es exacto, si es exacto no muestres decimal: 12000 → "12 mil")
+> - millones → "1,2 M" con el mismo criterio de decimales
+> - comprurbalo contra estos valores reales de la API que ya usamos: likesCount: 21001, commentsCount: 454, repostsCount: 1000, savesCount: 52000 y booksCount: 33.
+> añade un test rapido o unos console.log de verificacion con esos valores exactos para confirmar el formato antes de darlo por bueno
+
+**What I did:**
+- Implemented `formatCount` in `frontend/src/utils/formatCount.ts` with Spanish social-style thresholds (<1000 raw, miles with optional 1 decimal comma, millones as M).
+- Added `frontend/src/utils/formatCount.verify.ts` and ran it with tsx; all API sample values and decimal edge cases passed.
+---
+### 2026-07-29T15:41:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> implementa formatShortDate(isoString: string): string en src/utils/formatDate.ts.
+>
+> Recibe un ISO string tipo "2025-09-05T10:00:00.000Z" y debe devolver el
+> formato corto que se usa junto al nombre del autor en el feed (5 sep). Usa solo JS nativo (Intl.DateTimeFormat
+> con locale 'es'), sin librerias externas como date-fns o dayjs a menos que
+> ya esten en package.json
+
+**What I did:**
+- Implemented `formatShortDate` in `frontend/src/utils/formatDate.ts` with `Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' })`.
+- Normalized month to 3 letters so September is `sep` (Intl returns `sept`).
+- Verified seed ISO `2025-09-05T10:00:00.000Z` → `"5 sep"`.
