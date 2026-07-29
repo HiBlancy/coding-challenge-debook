@@ -1,8 +1,9 @@
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchProfilePosts } from '@/api/users';
 import type { Post } from '@/types';
 
 /**
- * 🚧 TODO — Posts del perfil (paginados). Usa `fetchProfilePosts`
- * (`@/api/users`) y expón la forma de abajo para la lista y sus estados.
+ * Posts del perfil (paginados) vía React Query infinite query.
  */
 export function useProfilePosts(userId: string): {
   posts: Post[];
@@ -13,15 +14,34 @@ export function useProfilePosts(userId: string): {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
 } {
-  void userId;
-  // Placeholder para que la pantalla compile mientras lo implementas.
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['profilePosts', userId],
+    queryFn: ({ pageParam }) =>
+      fetchProfilePosts(userId, pageParam as string | undefined),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    staleTime: 60_000,
+  });
+
   return {
-    posts: [],
-    isLoading: false,
-    isError: false,
-    refetch: () => {},
-    fetchNextPage: () => {},
-    hasNextPage: false,
-    isFetchingNextPage: false,
+    posts: (data?.pages ?? []).flatMap((page) => page.items),
+    isLoading,
+    isError,
+    refetch: () => {
+      void refetch();
+    },
+    fetchNextPage: () => {
+      void fetchNextPage();
+    },
+    hasNextPage,
+    isFetchingNextPage,
   };
 }

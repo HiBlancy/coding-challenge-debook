@@ -174,3 +174,31 @@
 - Implemented `formatShortDate` in `frontend/src/utils/formatDate.ts` with `Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' })`.
 - Normalized month to 3 letters so September is `sep` (Intl returns `sept`).
 - Verified seed ISO `2025-09-05T10:00:00.000Z` → `"5 sep"`.
+---
+### 2026-07-29T15:57:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> implementa useProfilePosts en src/hooks/useProfilePosts.ts, reemplazando el
+> placeholder actual. Sigue el estilo de useProfile.ts (React Query).
+>
+> - fetchProfilePosts(userId, cursor?, limit?) ya existe en src/api/users.ts y devuelve PostsPage = { items: Post[], nextCursor: string | null }.
+> - la firma de retorno del hook NO puede cambiar, ya la consume ProfileScreen.tsx tal cual: { posts: Post[], isLoading: boolean, isError: boolean, refetch: () => void,  fetchNextPage: () => void, hasNextPage: boolean, isFetchingNextPage: boolean }
+>
+> Requisitos:
+> 1. Usa useInfiniteQuery de @tanstack/react-query.
+> 2. queryKey: ['profilePosts', userId]
+> 3. queryFn: ({ pageParam }) => fetchProfilePosts(userId, pageParam as string | undefined)
+> 4. initialPageParam: undefined
+> 5. getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined
+> 6. staleTime: 60_000 (igual que useProfile)
+> 7. Mapea el resultado de useInfiniteQuery a la forma exacta de retorno pedida arriba:
+> - posts: (data?.pages ?? []).flatMap(page => page.items)
+> - isLoading: la propia isLoading de la query
+> - isError: la propia isError
+> - refetch: la funcion refetch que da useInfiniteQuery (envuelvela en () => void si hace falta para no romper el tipo)
+> - fetchNextPage: envuelto en () => void { fetchNextPage(); } (descarta la promesa que devuelve React Query si el tipo lo exige)
+> - hasNextPage, isFetchingNextPage: tal cual los da useInfiniteQuery
+
+**What I did:**
+- Replaced placeholder in `frontend/src/hooks/useProfilePosts.ts` with `useInfiniteQuery` wired to `fetchProfilePosts`.
+- Mapped pages to flat `posts` and wrapped `refetch` / `fetchNextPage` as `() => void`; `tsc --noEmit` passed.
