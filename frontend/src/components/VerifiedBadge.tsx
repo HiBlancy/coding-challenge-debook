@@ -7,7 +7,7 @@ export function VerifiedBadge({ size = 18 }: { size?: number }) {
     <MaterialCommunityIcons
       name="check-decagram"
       size={size}
-      color={colors.verified}
+      color={colors.brand}
     />
   );
 }

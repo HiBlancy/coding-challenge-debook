@@ -6,12 +6,14 @@
  */
 
 export const colors = {
+  brand: '#DC0867',
   gradientTop: '#DC0867',
   bg: '#000000',
 
   surface: '#161616',
   surfaceElevated: '#1F1F1F',
   border: '#2A2A2A',
+  borderLight: '#E8E8E8',
   chipBackground: '#2C2C2C',
 
   textPrimary: '#FFFFFF',
@@ -44,6 +46,8 @@ export const sizes = {
   postAvatar: 44,
   profileAvatar: 116,
   moreIcon: 22,
+  /** Offset del badge de notificación sobre el chip (Clubs). */
+  badgeOffset: 6,
 } as const;
 
 export const typography = {

@@ -97,6 +97,6 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 2,
     alignSelf: 'stretch',
-    backgroundColor: colors.accent,
+    backgroundColor: colors.brand,
   },
 });

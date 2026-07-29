@@ -1,8 +1,8 @@
 import { Feather } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 import type { UserProfile } from '@/types';
 import { colors, radius, sizes, spacing, typography } from '@/theme/tokens';
+import { Avatar } from './Avatar';
 import { Pill } from './Pill';
 import { StatsRow } from './StatsRow';
 import { VerifiedBadge } from './VerifiedBadge';
@@ -22,15 +22,10 @@ export function ProfileHeader({ profile }: { profile: UserProfile }) {
 
       {/* Avatar */}
       <View style={styles.avatarWrap}>
-        <Image
-          source={{ uri: profile.avatarUrl }}
-          style={styles.avatar}
-          contentFit="cover"
-          transition={200}
-          cachePolicy="none"
-          onError={(e) => {
-            console.warn('avatar load error', profile.avatarUrl, e);
-          }}
+        <Avatar
+          uri={profile.avatarUrl}
+          name={profile.fullName}
+          size={sizes.profileAvatar}
         />
       </View>
 
@@ -104,12 +99,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.sm,
   },
-  avatar: {
-    width: sizes.profileAvatar,
-    height: sizes.profileAvatar,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surface,
-  },
   centerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -118,6 +107,9 @@ const styles = StyleSheet.create({
   },
   debookerPill: {
     paddingVertical: spacing.xs + 2,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.borderLight,
   },
   readingsRow: {
     marginTop: spacing.xs,
@@ -125,7 +117,7 @@ const styles = StyleSheet.create({
   readings: {
     color: colors.textPrimary,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   nameRow: {
     gap: spacing.sm,
@@ -141,6 +133,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.textPrimary,
     fontSize: 15,
+    fontWeight: '400',
     marginTop: spacing.xs,
   },
   actionsRow: {
@@ -165,12 +158,12 @@ const styles = StyleSheet.create({
   },
   clubsBadge: {
     position: 'absolute',
-    top: -spacing.sm,
-    right: -spacing.sm,
+    top: -sizes.badgeOffset,
+    right: -sizes.badgeOffset,
     minWidth: 18,
     height: 18,
     borderRadius: radius.pill,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.brand,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 4,

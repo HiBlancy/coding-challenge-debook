@@ -14,16 +14,23 @@ function Action({
   icon,
   count,
   active,
+  disabled,
   onPress,
 }: {
   icon: keyof typeof Feather.glyphMap;
   count: number;
   active?: boolean;
+  disabled?: boolean;
   onPress?: () => void;
 }) {
   const color = active ? colors.accent : colors.textSecondary;
   return (
-    <TouchableOpacity style={styles.action} onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={styles.action}
+      onPress={onPress}
+      activeOpacity={0.7}
+      disabled={disabled}
+    >
       <Feather name={icon} size={20} color={color} />
       <Text style={[styles.count, { color }]}>{formatCount(count)}</Text>
     </TouchableOpacity>
@@ -32,7 +39,8 @@ function Action({
 
 /** Fila de acciones: like (corazón) · comentarios · reposts · guardados. */
 export function PostActions({ post }: { post: Post }) {
-  const { toggle } = useToggleLike(post);
+  const { toggleLike, isPending } = useToggleLike();
+  const likePending = isPending(post.id);
 
   return (
     <View style={styles.row}>
@@ -40,7 +48,8 @@ export function PostActions({ post }: { post: Post }) {
         icon={post.likedByMe ? 'heart' : 'heart'}
         count={post.likesCount}
         active={post.likedByMe}
-        onPress={toggle}
+        disabled={likePending}
+        onPress={() => toggleLike(post)}
       />
       <Action icon="message-circle" count={post.commentsCount} />
       <Action icon="send" count={post.repostsCount} />

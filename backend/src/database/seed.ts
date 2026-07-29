@@ -54,8 +54,7 @@ async function seed(): Promise<void> {
     fullName: 'Alberto Rodilla',
     tagline: 'Debooker',
     bio: 'Empresario y obsesionado de los libros',
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/9/9a/Haruki_Murakami_2018.jpg',
+    avatarUrl: `https://i.pravatar.cc/300?u=${ALBERTO_ID}`,
     verified: true,
     isAuthor: false,
     booksCount: 544,
@@ -69,8 +68,7 @@ async function seed(): Promise<void> {
     fullName: 'Santi Leal',
     tagline: 'Debooker',
     bio: 'Escribo sobre lo que leo.',
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/9/9a/Haruki_Murakami_2018.jpg',
+    avatarUrl: `https://i.pravatar.cc/300?u=${SANTI_ID}`,
     verified: true,
     isAuthor: true,
     booksCount: 33,
@@ -84,8 +82,7 @@ async function seed(): Promise<void> {
     fullName: 'Mario Casas',
     tagline: 'Debooker',
     bio: 'Aquí para leer.',
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/9/9a/Haruki_Murakami_2018.jpg',
+    avatarUrl: `https://i.pravatar.cc/300?u=${MARIO_ID}`,
     verified: false,
     isAuthor: false,
     booksCount: 4,
@@ -104,7 +101,6 @@ async function seed(): Promise<void> {
     linkLabel: 'No te lo pierdas esto!!!!!',
     bookTitle: 'Encontrar un hogar',
     bookAuthor: 'René Ponte',
-    bookCoverUrl: null,
     commentsCount: 454,
     repostsCount: 1_000,
     savesCount: 52_000,
@@ -114,12 +110,14 @@ async function seed(): Promise<void> {
     posts.create({
       ...basePost,
       id: POST_1_ID,
+      bookCoverUrl: `https://picsum.photos/seed/${POST_1_ID}/200/300`,
       likesCount: 21_000,
       createdAt: new Date('2025-09-05T10:00:00Z'),
     }),
     posts.create({
       ...basePost,
       id: POST_2_ID,
+      bookCoverUrl: `https://picsum.photos/seed/${POST_2_ID}/200/300`,
       likesCount: 21_000,
       createdAt: new Date('2025-09-05T09:00:00Z'),
     }),

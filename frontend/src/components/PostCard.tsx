@@ -6,6 +6,7 @@ import type { Post } from '@/types';
 import { formatShortDate } from '@/utils/formatDate';
 import { formatCount } from '@/utils/formatCount';
 import { colors, radius, sizes, spacing, typography } from '@/theme/tokens';
+import { Avatar } from './Avatar';
 import { PostActions } from './PostActions';
 import { Pill } from './Pill';
 import { VerifiedBadge } from './VerifiedBadge';
@@ -25,15 +26,10 @@ export function PostCard({ post }: { post: Post }) {
     <View style={styles.card}>
       {/* Cabecera de autor */}
       <View style={styles.authorRow}>
-        <Image
-          source={{ uri: post.author.avatarUrl }}
-          style={styles.avatar}
-          contentFit="cover"
-          transition={200}
-          cachePolicy="none"
-          onError={(e) => {
-            console.warn('avatar load error', post.author.avatarUrl, e);
-          }}
+        <Avatar
+          uri={post.author.avatarUrl}
+          name={post.author.fullName}
+          size={sizes.postAvatar}
         />
         <View style={styles.authorInfo}>
           <View style={styles.authorNameRow}>
@@ -124,12 +120,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
   },
-  avatar: {
-    width: sizes.postAvatar,
-    height: sizes.postAvatar,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surface,
-  },
   authorInfo: {
     flex: 1,
     gap: 2,
@@ -168,7 +158,7 @@ const styles = StyleSheet.create({
     marginRight: authorTextTrailing,
   },
   readMore: {
-    color: colors.accent,
+    color: colors.brand,
     fontSize: 16,
     marginTop: -spacing.sm,
     marginLeft: authorTextIndent,

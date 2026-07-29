@@ -220,3 +220,39 @@
 - `PostCard` body indented to align with author text block; avatar Image props for load/debug.
 - `ProfileHeader` action chips gray/white, green trending icon, Clubs notification badge absolute; avatar Image props.
 - `Pill` default bg uses `colors.bg` instead of hardcoded black.
+---
+### 2026-07-29T16:47:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> implementa useToggleLike en src/hooks/useToggleLike.ts
+>
+> - likePost(postId) y unlikePost(postId) ya existen en src/api/posts.ts...
+> (optimistic update, Zustand pending, query key profilePosts)
+
+**What I did:**
+- Implemented `useToggleLike` with `useMutation`, optimistic cache updates on `['profilePosts', PROFILE_USER_ID]`, rollback on error, `LikeResult` sync on success, Zustand `setPending`/`isPending`.
+- Updated `PostActions` to new API `{ toggleLike, isPending }` and disable like button while pending.
+- `tsc --noEmit` passed.
+---
+### 2026-07-29T17:00:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> Revisa src/database/seed.ts (backend). Las avatarUrl y bookCoverUrl que usa el seed dan 404...
+> (pravatar/picsum, docker reset+seed, avatar fallback con iniciales)
+
+**What I did:**
+- Updated seed avatars to `https://i.pravatar.cc/300?u=<id>` and book covers to `https://picsum.photos/seed/<id>/200/300`.
+- Ran `docker compose down -v`, `docker compose up -d`, `npm run seed` successfully.
+- Added `Avatar` component with initials fallback on `onError`; wired in `ProfileHeader` and `PostCard`.
+---
+### 2026-07-29T17:17:00+02:00 — Cursor (Composer)
+
+**Prompt (verbatim):**
+> Aplica estos cambios de estilo, usando tokens en src/theme/tokens.ts...
+> (brand, VerifiedBadge, Debooker chip, ProfileTabs, tipografía, Clubs badge)
+
+**What I did:**
+- Added `colors.brand`, `colors.borderLight`, `sizes.badgeOffset`.
+- `VerifiedBadge`, ProfileTabs underline, Clubs badge, `Leer más` → `colors.brand`.
+- Debooker pill: transparent + `borderLight` outline.
+- `Mis lecturas` fontWeight `600` → `400`; bio already regular, set explicit `400`.
